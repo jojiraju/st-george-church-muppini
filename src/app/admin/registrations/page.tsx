@@ -5,7 +5,6 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Users, 
-  User, 
   MapPin, 
   Phone, 
   Mail, 
@@ -17,83 +16,10 @@ import {
   UserCheck, 
   Bookmark, 
   Compass,
-  Database,
   CalendarDays
 } from "lucide-react";
 import GlassCard from "@/components/ui/GlassCard";
 import { useLenis } from "@/lib/lenis";
-
-// Authentic Kerala parish dummy seed data for immediate visual premium appearance
-const dummyFamilies = [
-  {
-    id: "fam_dummy_1",
-    familyHead: "Mr. Joji Raju Plathottam",
-    spouseName: "Mrs. Jessy Joji",
-    contactPhone: "+91 9447201976",
-    emailAddress: "jojiraju@plathottam.com",
-    houseName: "Plathottam House",
-    wardName: "St. Thomas Ward (Edakkara Town)",
-    previousParish: "St. Mary's Cathedral, Sultan Bathery",
-    membersCount: 4,
-    membersDetails: [
-      { name: "Albin Joji Plathottam", relation: "Son", age: 24 },
-      { name: "Anupa Mary Joji", relation: "Daughter", age: 21 }
-    ],
-    remarks: "Requesting special prayers for children's higher education and career guidance.",
-    registeredAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
-  },
-  {
-    id: "fam_dummy_2",
-    familyHead: "Mr. Abraham Vadakkeparambil",
-    spouseName: "Mrs. Annamma Abraham",
-    contactPhone: "+91 9845300210",
-    emailAddress: "abraham.v@yahoo.com",
-    houseName: "Vadakkeparambil House",
-    wardName: "St. Mary's Ward (Munda)",
-    previousParish: "St. George Church, Nilambur",
-    membersCount: 3,
-    membersDetails: [
-      { name: "Thomas Abraham", relation: "Son", age: 28 }
-    ],
-    remarks: "Parish vicar blessing requested for our new rubber plantation project.",
-    registeredAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
-  },
-  {
-    id: "fam_dummy_3",
-    familyHead: "Mrs. Marykutty Mathew",
-    spouseName: "Late Mr. Mathew Joseph",
-    contactPhone: "+91 8086450122",
-    emailAddress: "",
-    houseName: "Kalloopara House",
-    wardName: "St. Thomas Ward (Edakkara Town)",
-    previousParish: "",
-    membersCount: 3,
-    membersDetails: [
-      { name: "Mathew K. Mathew", relation: "Son", age: 34 },
-      { name: "Rani Mathew", relation: "Daughter-in-law", age: 30 }
-    ],
-    remarks: "Mathew is an active MCYM youth member. Special prayers for health requested.",
-    registeredAt: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString()
-  },
-  {
-    id: "fam_dummy_4",
-    familyHead: "Mr. Sebastian K. J.",
-    spouseName: "Mrs. Philomina Sebastian",
-    contactPhone: "+91 9446123456",
-    emailAddress: "sebastiankj@gmail.com",
-    houseName: "Kizhakkekara House",
-    wardName: "St. George Ward (Palemad)",
-    previousParish: "St. Mary's, Mananthavady",
-    membersCount: 5,
-    membersDetails: [
-      { name: "Joseph Sebastian", relation: "Son", age: 22 },
-      { name: "Maria Sebastian", relation: "Daughter", age: 19 },
-      { name: "Ann Sebastian", relation: "Daughter", age: 17 }
-    ],
-    remarks: "Looking forward to enrolling the children in Sunday School catechism.",
-    registeredAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString()
-  }
-];
 
 const parishWards = [
   "St. Thomas Ward (Edakkara Town)",
@@ -107,7 +33,6 @@ const parishWards = [
 export default function RegistrationsDirectoryPage() {
   const [families, setFamilies] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [useCMSBackend, setUseCMSBackend] = useState(false); // Toggle between local JSON API and Express backend
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedWard, setSelectedWard] = useState("All Wards");
   const [selectedFamily, setSelectedFamily] = useState<any | null>(null); // Popup modal detail view state
@@ -122,23 +47,17 @@ export default function RegistrationsDirectoryPage() {
   const fetchRegistrations = async () => {
     setLoading(true);
     try {
-      // Endpoint switches depending on toggle
-      const endpoint = useCMSBackend 
-        ? "http://localhost:5000/api/register-family" 
-        : "/api/register-family";
-
-      const res = await fetch(endpoint);
+      const res = await fetch("/api/register-family");
       const json = await res.json();
       
-      if (json.success && json.data && json.data.length > 0) {
+      if (json.success && json.data) {
         setFamilies(json.data);
       } else {
-        // Fallback to dummy seeds if local/express db is empty
-        setFamilies(dummyFamilies);
+        setFamilies([]);
       }
     } catch (err) {
-      console.warn("Failed to fetch families. Using visual demo seeds.");
-      setFamilies(dummyFamilies);
+      console.warn("Failed to fetch families.");
+      setFamilies([]);
     } finally {
       setLoading(false);
     }
@@ -146,7 +65,7 @@ export default function RegistrationsDirectoryPage() {
 
   useEffect(() => {
     fetchRegistrations();
-  }, [useCMSBackend]);
+  }, []);
 
   // Stop body & Lenis page scrolling when the modal popup detail view is active
   useEffect(() => {
@@ -178,7 +97,6 @@ export default function RegistrationsDirectoryPage() {
   const stats = useMemo(() => {
     const totalFams = families.length;
     const totalMembers = families.reduce((acc, f) => {
-      // Sum head + spouse (if exists) + additional members
       let members = 1; // Head
       if (f.spouseName && f.spouseName.trim() !== "") members += 1;
       members += (f.membersDetails?.length || 0);
@@ -261,39 +179,6 @@ export default function RegistrationsDirectoryPage() {
           <div className="w-[80px] h-[1px] bg-primary-gold/30 mx-auto mt-6" />
         </div>
 
-        {/* Connection Switcher */}
-        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-center bg-[#120a0c]/40 border border-white/[0.05] rounded-2xl p-4 mb-8 gap-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary-maroon/20 rounded-xl text-primary-gold border border-primary-maroon/30">
-              <Database className="w-4 h-4" />
-            </div>
-            <div>
-              <p className="text-xs text-white/50 uppercase tracking-wider font-semibold">Active Database Source</p>
-              <p className="text-sm text-white font-medium">
-                {useCMSBackend ? "External Node.js Express Server" : "Next.js Local File Database (registrations.json)"}
-              </p>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setUseCMSBackend(!useCMSBackend)}
-              className="px-4 py-2 bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 hover:border-primary-gold/30 rounded-lg text-xs text-church-fg hover:text-primary-gold transition-all duration-300"
-            >
-              Switch to {useCMSBackend ? "Local Next.js DB" : "Express CMS Server"}
-            </button>
-
-            <button
-              onClick={fetchRegistrations}
-              disabled={loading}
-              className="p-2.5 bg-primary-maroon/10 hover:bg-primary-maroon/30 border border-primary-gold/20 rounded-lg text-primary-gold hover:text-white transition-colors disabled:opacity-50"
-              aria-label="Refresh Database"
-            >
-              <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
-            </button>
-          </div>
-        </div>
-
         {/* Global Statistics Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
           <GlassCard hoverEffect={false} glowColor="none" className="bg-[#120a0c]/60 border-white/5 p-6 flex items-center gap-5">
@@ -340,18 +225,29 @@ export default function RegistrationsDirectoryPage() {
             />
           </div>
 
-          <div className="flex items-center gap-3 w-full md:w-auto">
-            <Filter className="w-4 h-4 text-primary-gold shrink-0" />
-            <select
-              value={selectedWard}
-              onChange={(e) => setSelectedWard(e.target.value)}
-              className="w-full md:w-64 bg-black/80 border border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-primary-gold/60 transition-colors cursor-pointer"
+          <div className="flex items-center gap-4 w-full md:w-auto justify-end">
+            <div className="flex items-center gap-3">
+              <Filter className="w-4 h-4 text-primary-gold shrink-0" />
+              <select
+                value={selectedWard}
+                onChange={(e) => setSelectedWard(e.target.value)}
+                className="w-full md:w-64 bg-black/80 border border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-primary-gold/60 transition-colors cursor-pointer"
+              >
+                <option value="All Wards" className="bg-[#0f0709]">All Parish Wards</option>
+                {parishWards.map((w) => (
+                  <option key={w} value={w} className="bg-[#0f0709]">{w}</option>
+                ))}
+              </select>
+            </div>
+
+            <button
+              onClick={fetchRegistrations}
+              disabled={loading}
+              className="p-3 bg-primary-maroon/10 hover:bg-primary-maroon/30 border border-primary-gold/20 rounded-xl text-primary-gold hover:text-white transition-colors disabled:opacity-50"
+              aria-label="Refresh Database"
             >
-              <option value="All Wards" className="bg-[#0f0709]">All Parish Wards</option>
-              {parishWards.map((w) => (
-                <option key={w} value={w} className="bg-[#0f0709]">{w}</option>
-              ))}
-            </select>
+              <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
+            </button>
           </div>
         </div>
 
@@ -362,12 +258,20 @@ export default function RegistrationsDirectoryPage() {
               <RefreshCw className="w-8 h-8 animate-spin text-primary-gold mx-auto mb-4" />
               <p className="text-church-muted text-sm uppercase tracking-widest font-medium">Synchronizing parish archives...</p>
             </div>
-          ) : familiesByWard.length === 0 ? (
-            <div className="p-20 text-center border border-dashed border-white/10 rounded-3xl bg-black/[0.08]">
+          ) : families.length === 0 ? (
+            <div className="p-20 text-center border border-dashed border-white/10 rounded-3xl bg-black/[0.08] max-w-3xl mx-auto">
+              <Users className="w-12 h-12 text-primary-gold/40 mx-auto mb-4" />
+              <h3 className="font-serif text-xl text-white mb-2">No Registered Families Found</h3>
+              <p className="text-xs text-church-muted max-w-md mx-auto leading-relaxed">
+                There are currently no registered families in the database. When parishioners submit the online family registration form, their details will automatically appear here in the directory.
+              </p>
+            </div>
+          ) : filteredFamilies.length === 0 ? (
+            <div className="p-20 text-center border border-dashed border-white/10 rounded-3xl bg-black/[0.08] max-w-3xl mx-auto">
               <Bookmark className="w-12 h-12 text-white/15 mx-auto mb-4" />
               <h3 className="font-serif text-lg text-white mb-2">No Records Found</h3>
               <p className="text-xs text-church-muted max-w-sm mx-auto">
-                No family registries match your active search filter or selected parish ward. Try resetting the filters.
+                No family registries match your active search filters or selected parish ward. Try resetting the filters.
               </p>
             </div>
           ) : (
