@@ -100,7 +100,7 @@ export default function AboutPage() {
                 key={evt.year}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
+                viewport={{ once: true, margin: "-15px" }}
                 transition={{ duration: 0.8, delay: idx * 0.1, ease: "easeOut" }}
                 className="relative"
               >
