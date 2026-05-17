@@ -42,8 +42,13 @@ export async function POST(request: Request) {
 
     const validatedData = validationResult.data;
 
+    const isVercel = !!process.env.VERCEL;
+
     // Define filesystem path to the local database
-    const dbPath = path.join(process.cwd(), "src", "data", "registrations.json");
+    // On Vercel (read-only filesystem), we write to /tmp to avoid ENOENT/EROFS errors.
+    const dbPath = isVercel
+      ? path.join("/tmp", "registrations.json")
+      : path.join(process.cwd(), "src", "data", "registrations.json");
 
     // Read existing database content
     let dbContent: any[] = [];
@@ -51,8 +56,19 @@ export async function POST(request: Request) {
       const fileData = await fs.readFile(dbPath, "utf-8");
       dbContent = JSON.parse(fileData);
     } catch (readError) {
-      // If file doesn't exist, start with an empty array
-      dbContent = [];
+      // If we are on Vercel and /tmp/registrations.json doesn't exist yet,
+      // try to read the initial bundled registrations.json from process.cwd() as a seed.
+      if (isVercel) {
+        try {
+          const bundledPath = path.join(process.cwd(), "src", "data", "registrations.json");
+          const fileData = await fs.readFile(bundledPath, "utf-8");
+          dbContent = JSON.parse(fileData);
+        } catch (bundleReadError) {
+          dbContent = [];
+        }
+      } else {
+        dbContent = [];
+      }
     }
 
     // Generate new record with unique ID and timestamp
@@ -64,7 +80,16 @@ export async function POST(request: Request) {
 
     // Append and save back
     dbContent.push(newRecord);
-    await fs.writeFile(dbPath, JSON.stringify(dbContent, null, 2), "utf-8");
+    try {
+      // If writing to /tmp on Vercel, make sure the directory is created
+      if (isVercel) {
+        await fs.mkdir("/tmp", { recursive: true });
+      }
+      await fs.writeFile(dbPath, JSON.stringify(dbContent, null, 2), "utf-8");
+    } catch (writeError) {
+      // Log write error but do NOT fail the response; prioritizing user submission success
+      console.error("Failed to write registration to local filesystem database:", writeError);
+    }
 
     // Sync with Node.js Express CMS server if online
     try {
@@ -82,16 +107,23 @@ export async function POST(request: Request) {
         notes: validatedData.remarks || ""
       };
 
-      await fetch("http://localhost:5000/api/register-family", {
+      const cmsBaseUrl = process.env.CMS_API_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+      const syncUrl = cmsBaseUrl.endsWith("/api") 
+        ? `${cmsBaseUrl}/register-family` 
+        : cmsBaseUrl.includes("/api/") 
+          ? cmsBaseUrl.replace(/\/api\/?$/, "/api/register-family")
+          : `${cmsBaseUrl}/api/register-family`;
+
+      await fetch(syncUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify(expressRecord)
       });
-      console.log("Synced family registration to CMS Node.js server successfully!");
+      console.log(`Synced family registration to CMS Node.js server successfully at: ${syncUrl}`);
     } catch (syncError) {
-      console.warn("CMS Node.js server offline. Saved locally in Next.js.");
+      console.warn("CMS Node.js server offline or unreachable. Saved locally in Next.js.");
     }
 
     return NextResponse.json(

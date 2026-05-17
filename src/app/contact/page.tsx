@@ -45,7 +45,8 @@ export default function ContactPage() {
   const onSubmit = async (data: ContactFormValues) => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/api/contact", {
+      const cmsBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+      const response = await fetch(`${cmsBaseUrl.replace(/\/+$/, "")}/contact`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

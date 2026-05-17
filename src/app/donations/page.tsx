@@ -62,7 +62,8 @@ export default function DonationsPage() {
   const onSubmit = async (data: DonationFormValues) => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/api/donations", {
+      const cmsBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+      const response = await fetch(`${cmsBaseUrl.replace(/\/+$/, "")}/donations`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
