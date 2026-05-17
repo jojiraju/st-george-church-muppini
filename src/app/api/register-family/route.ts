@@ -149,6 +149,99 @@ export async function POST(request: Request) {
 
 export async function GET() {
   try {
+    // 1. Try to fetch from CMS Node.js Express server first
+    const cmsBaseUrl = process.env.CMS_API_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+    
+    // Normalize cmsBaseUrl to end with /api
+    const apiBase = cmsBaseUrl.endsWith("/api") 
+      ? cmsBaseUrl 
+      : cmsBaseUrl.includes("/api/") 
+        ? cmsBaseUrl.substring(0, cmsBaseUrl.indexOf("/api") + 4)
+        : `${cmsBaseUrl}/api`;
+
+    try {
+      console.log(`[Next.js API] Attempting to sync registrations from CMS Express server: ${apiBase}`);
+      
+      // Request authentication token from CMS Express server
+      const loginRes = await fetch(`${apiBase}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: "admin", password: "admin@1976" }),
+        // Avoid getting stuck on slow serverless responses
+        signal: AbortSignal.timeout(6000)
+      });
+      
+      const loginData = await loginRes.json();
+      
+      if (loginData.success && loginData.token) {
+        // Fetch registrations using JWT
+        const fetchRes = await fetch(`${apiBase}/register-family`, {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${loginData.token}`
+          },
+          signal: AbortSignal.timeout(8000)
+        });
+        
+        const fetchData = await fetchRes.json();
+        
+        if (fetchData.success && fetchData.data) {
+          console.log(`[Next.js API] Successfully synchronized ${fetchData.data.length} registrations from CMS backend!`);
+          
+          // Map response data to ensure compatible format with the frontend schema
+          const mappedData = fetchData.data.map((record: any) => {
+            // Find head and spouse details if stored in members array (legacy compatibility)
+            const headFromMembers = record.members ? record.members.find((m: any) => m.relation === 'Head of Family' || m.relation === 'Head') : null;
+            const spouseFromMembers = record.members ? record.members.find((m: any) => m.relation === 'Spouse') : null;
+            
+            const familyHead = record.familyHead || record.headName || (headFromMembers ? headFromMembers.name : "");
+            const spouseName = record.spouseName || (spouseFromMembers ? spouseFromMembers.name : "");
+            
+            let membersDetails = record.membersDetails || [];
+            if ((!membersDetails || membersDetails.length === 0) && record.members) {
+              membersDetails = record.members
+                .filter((m: any) => m.relation !== 'Head of Family' && m.relation !== 'Head' && m.relation !== 'Spouse')
+                .map((m: any) => ({
+                  name: m.name,
+                  relation: m.relation,
+                  age: parseInt(m.age) || 0
+                }));
+            }
+            
+            const houseName = record.houseName || (record.familyName ? record.familyName.replace(" Family", "") : "");
+            const wardName = record.wardName || record.familyWard || "";
+            const remarks = record.remarks || record.notes || "";
+            const contactPhone = record.contactPhone || record.phone || "";
+            
+            return {
+              id: record.id || record._id || `fam_${Date.now()}`,
+              familyHead,
+              spouseName,
+              contactPhone,
+              emailAddress: record.emailAddress || record.email || "",
+              houseName,
+              wardName,
+              previousParish: record.previousParish || "",
+              membersCount: record.membersCount || (membersDetails.length + (spouseName ? 2 : 1)),
+              membersDetails,
+              remarks,
+              registeredAt: record.registeredAt || record.submittedAt || new Date().toISOString()
+            };
+          });
+
+          return NextResponse.json({
+            success: true,
+            data: mappedData
+          });
+        }
+      } else {
+        console.warn("[Next.js API] CMS Auth failed:", loginData.error || "Unknown authentication error");
+      }
+    } catch (cmsError: any) {
+      console.warn("[Next.js API] CMS synchronization failed. Falling back to local database.", cmsError.message || cmsError);
+    }
+
+    // 2. Fallback: Read from local JSON database on Vercel ephemeral storage
     const isVercel = !!process.env.VERCEL;
     const dbPath = isVercel
       ? path.join("/tmp", "registrations.json")
