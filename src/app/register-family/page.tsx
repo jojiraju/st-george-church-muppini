@@ -318,16 +318,18 @@ export default function RegisterFamilyPage() {
                         <p className="text-xs text-church-muted">No additional members added yet. Click "Add Member" to record children, parents, or dependants.</p>
                       </div>
                     ) : (
-                      <div className="space-y-4">
+                      <div className="space-y-4 bg-black/20 p-4 md:p-6 rounded-xl border border-white/5">
                         {fields.map((field, index) => (
                           <motion.div
                             key={field.id}
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="grid grid-cols-1 md:grid-cols-12 gap-4 bg-black/20 p-4 rounded-xl border border-white/5 items-end"
+                            className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end pb-4 border-b border-white/5 last:border-b-0 last:pb-0"
                           >
                             <div className="md:col-span-5">
-                              <label className="text-[10px] uppercase text-church-muted tracking-wider block mb-1.5">Member Full Name * <span className="text-[0.65em] text-primary-gold/70">(അംഗത്തിന്റെ സമ്പൂർണ പേര്)</span></label>
+                              {index === 0 && (
+                                <label className="text-[10px] uppercase text-church-muted tracking-wider block mb-1.5">Member Full Name * <span className="text-[0.65em] text-primary-gold/70">(അംഗത്തിന്റെ സമ്പൂർണ പേര്)</span></label>
+                              )}
                               <input
                                 type="text"
                                 placeholder="Member Name"
@@ -337,7 +339,9 @@ export default function RegisterFamilyPage() {
                             </div>
 
                             <div className="md:col-span-3">
-                              <label className="text-[10px] uppercase text-church-muted tracking-wider block mb-1.5">Relation * <span className="text-[0.65em] text-primary-gold/70">(ബന്ധം)</span></label>
+                              {index === 0 && (
+                                <label className="text-[10px] uppercase text-church-muted tracking-wider block mb-1.5">Relation * <span className="text-[0.65em] text-primary-gold/70">(ബന്ധം)</span></label>
+                              )}
                               <select
                                 {...register(`membersDetails.${index}.relation` as const)}
                                 className="w-full bg-black/80 border border-white/10 rounded-lg py-2 px-3 text-xs text-white focus:outline-none focus:border-primary-gold/60 transition-colors cursor-pointer"
@@ -349,7 +353,9 @@ export default function RegisterFamilyPage() {
                             </div>
 
                             <div className="md:col-span-3">
-                              <label className="text-[10px] uppercase text-church-muted tracking-wider block mb-1.5">Age * <span className="text-[0.65em] text-primary-gold/70">(വയസ്സ്)</span></label>
+                              {index === 0 && (
+                                <label className="text-[10px] uppercase text-church-muted tracking-wider block mb-1.5">Age * <span className="text-[0.65em] text-primary-gold/70">(വയസ്സ്)</span></label>
+                              )}
                               <input
                                 type="number"
                                 placeholder="Age"
