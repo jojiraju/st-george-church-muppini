@@ -101,7 +101,7 @@ export default function ContactPage() {
             transition={{ delay: 0.2, duration: 0.8 }}
             className="font-serif text-4xl md:text-6xl text-white tracking-wide"
           >
-            Contact Parish Office
+            Contact Parish Office <span className="block text-2xl md:text-4xl mt-1 text-primary-gold/70">(ഇടവക ഓഫീസ് ബന്ധപ്പെടുക)</span>
           </motion.h1>
           <div className="w-[80px] h-[1px] bg-primary-gold/30 mx-auto mt-6" />
         </div>
@@ -210,7 +210,7 @@ export default function ContactPage() {
                       {/* Topic dropdown selection */}
                       <div>
                         <label className="text-xs font-serif uppercase tracking-widest text-primary-gold font-bold block mb-2.5">
-                          Inquiry Topic
+                          Inquiry Topic <span className="text-[0.7em] text-primary-gold/70">(അന്വേഷണ വിഷയം)</span>
                         </label>
                         <select
                           {...register("subject")}

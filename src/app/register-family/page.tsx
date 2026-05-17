@@ -128,7 +128,7 @@ export default function RegisterFamilyPage() {
       <div className="absolute top-[10%] right-[-100px] w-[400px] h-[400px] bg-primary-maroon-dark/15 rounded-full filter blur-[100px] pointer-events-none" />
       <div className="absolute bottom-[20%] left-[-150px] w-[350px] h-[350px] bg-primary-gold-dark/5 rounded-full filter blur-[80px] pointer-events-none" />
 
-      <div className="max-w-5xl mx-auto px-6 relative z-10">
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         
         {/* Page Title */}
         <div className="text-center mb-16">
@@ -145,7 +145,7 @@ export default function RegisterFamilyPage() {
             transition={{ delay: 0.2, duration: 0.8 }}
             className="font-serif text-4xl md:text-6xl text-white tracking-wide"
           >
-            Parish Family Registration
+            Parish Family Registration <span className="block text-2xl md:text-4xl mt-1 text-primary-gold/70">(ഇടവക കുടുംബ രജിസ്ട്രേഷൻ)</span>
           </motion.h1>
           <div className="w-[80px] h-[1px] bg-primary-gold/30 mx-auto mt-6" />
           <p className="font-sans text-xs sm:text-sm text-church-muted max-w-xl mx-auto mt-4 leading-relaxed">
@@ -169,12 +169,12 @@ export default function RegisterFamilyPage() {
                   <div>
                     <h3 className="font-serif text-sm uppercase tracking-widest text-primary-gold font-bold mb-5 flex items-center gap-2 border-b border-primary-gold/15 pb-2">
                       <Users className="w-4 h-4 text-primary-gold" />
-                      1. Household Information
+                      1. Household Information <span className="text-[0.7em] text-primary-gold/70">(കുടുംബ വിവരങ്ങൾ)</span>
                     </h3>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label className="text-xs uppercase text-church-muted tracking-wider block mb-2 font-medium">Family Head Name *</label>
+                        <label className="text-xs uppercase text-church-muted tracking-wider block mb-2 font-medium">Family Head Name * <span className="text-[0.65em] text-primary-gold/70">(കുടുംബനാഥന്‍റെ പേര്)</span></label>
                         <input
                           type="text"
                           placeholder="e.g. Mr. Abraham George"
@@ -187,7 +187,7 @@ export default function RegisterFamilyPage() {
                       </div>
 
                       <div>
-                        <label className="text-xs uppercase text-church-muted tracking-wider block mb-2 font-medium">Spouse Name (Optional)</label>
+                        <label className="text-xs uppercase text-church-muted tracking-wider block mb-2 font-medium">Spouse Name (Optional) <span className="text-[0.65em] text-primary-gold/70">(ഭാര്യ / ഭർത്താവിന്റെ പേര്)</span></label>
                         <input
                           type="text"
                           placeholder="e.g. Mrs. Mary Abraham"
@@ -202,12 +202,12 @@ export default function RegisterFamilyPage() {
                   <div>
                     <h3 className="font-serif text-sm uppercase tracking-widest text-primary-gold font-bold mb-5 flex items-center gap-2 border-b border-primary-gold/15 pb-2">
                       <MapPin className="w-4 h-4 text-primary-gold" />
-                      2. Residence & Parish Ward
+                      2. Residence & Parish Ward <span className="text-[0.7em] text-primary-gold/70">(താമസം & ഇടവക വാർഡ്)</span>
                     </h3>
                     
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       <div>
-                        <label className="text-xs uppercase text-church-muted tracking-wider block mb-2 font-medium">House Name *</label>
+                        <label className="text-xs uppercase text-church-muted tracking-wider block mb-2 font-medium">House Name * <span className="text-[0.65em] text-primary-gold/70">(വീടിന്റെ പേര്)</span></label>
                         <input
                           type="text"
                           placeholder="e.g. Plathottam House"
@@ -220,7 +220,7 @@ export default function RegisterFamilyPage() {
                       </div>
 
                       <div>
-                        <label className="text-xs uppercase text-church-muted tracking-wider block mb-2 font-medium">Select Parish Ward *</label>
+                        <label className="text-xs uppercase text-church-muted tracking-wider block mb-2 font-medium">Select Parish Ward * <span className="text-[0.65em] text-primary-gold/70">(ഇടവക വാർഡ് തിരഞ്ഞെടുക്കുക)</span></label>
                         <select
                           {...register("wardName")}
                           className="w-full bg-black/80 border border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-primary-gold/60 transition-colors cursor-pointer"
@@ -236,7 +236,7 @@ export default function RegisterFamilyPage() {
                       </div>
 
                       <div>
-                        <label className="text-xs uppercase text-church-muted tracking-wider block mb-2 font-medium">Previous Parish (If Migrated)</label>
+                        <label className="text-xs uppercase text-church-muted tracking-wider block mb-2 font-medium">Previous Parish (If Migrated) <span className="text-[0.65em] text-primary-gold/70">(മുൻ ഇടവക - പുറത്തുമാറിയാൽ മാത്രം)</span></label>
                         <input
                           type="text"
                           placeholder="e.g. St. Mary's Sultan Bathery"
@@ -251,12 +251,12 @@ export default function RegisterFamilyPage() {
                   <div>
                     <h3 className="font-serif text-sm uppercase tracking-widest text-primary-gold font-bold mb-5 flex items-center gap-2 border-b border-primary-gold/15 pb-2">
                       <Phone className="w-4 h-4 text-primary-gold" />
-                      3. Contact Coordinates
+                      3. Contact Coordinates <span className="text-[0.7em] text-primary-gold/70">(ബന്ധപ്പെടാനുള്ള വിശദാംശങ്ങൾ)</span>
                     </h3>
                     
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       <div className="md:col-span-1">
-                        <label className="text-xs uppercase text-church-muted tracking-wider block mb-2 font-medium">Contact Phone *</label>
+                        <label className="text-xs uppercase text-church-muted tracking-wider block mb-2 font-medium">Contact Phone * <span className="text-[0.65em] text-primary-gold/70">(സമ്പർക്ക ഫോൺ)</span></label>
                         <input
                           type="text"
                           placeholder="e.g. +91 9447100000"
@@ -269,7 +269,7 @@ export default function RegisterFamilyPage() {
                       </div>
 
                       <div className="md:col-span-1">
-                        <label className="text-xs uppercase text-church-muted tracking-wider block mb-2 font-medium">Email Address</label>
+                        <label className="text-xs uppercase text-church-muted tracking-wider block mb-2 font-medium">Email Address <span className="text-[0.65em] text-primary-gold/70">(ഇമെയിൽ വിലാസം)</span></label>
                         <input
                           type="email"
                           placeholder="e.g. abraham@gmail.com"
@@ -282,7 +282,7 @@ export default function RegisterFamilyPage() {
                       </div>
 
                       <div className="md:col-span-1">
-                        <label className="text-xs uppercase text-church-muted tracking-wider block mb-2 font-medium">Total Family Members count *</label>
+                        <label className="text-xs uppercase text-church-muted tracking-wider block mb-2 font-medium">Total Family Members count * <span className="text-[0.65em] text-primary-gold/70">(കുടുംബാംഗങ്ങളുടെ എണ്ണം)</span></label>
                         <input
                           type="number"
                           {...register("membersCount", { valueAsNumber: true })}
@@ -300,7 +300,7 @@ export default function RegisterFamilyPage() {
                     <div className="flex justify-between items-center mb-5 border-b border-primary-gold/15 pb-2">
                       <h3 className="font-serif text-sm uppercase tracking-widest text-primary-gold font-bold flex items-center gap-2">
                         <UserPlus className="w-4 h-4 text-primary-gold" />
-                        4. Family Members Roster
+                        4. Family Members Roster <span className="text-[0.7em] text-primary-gold/70">(കുടുംബ അംഗങ്ങളുടെ പട്ടിക)</span>
                       </h3>
                       <button
                         type="button"
@@ -327,7 +327,7 @@ export default function RegisterFamilyPage() {
                             className="grid grid-cols-1 md:grid-cols-12 gap-4 bg-black/20 p-4 rounded-xl border border-white/5 items-end"
                           >
                             <div className="md:col-span-5">
-                              <label className="text-[10px] uppercase text-church-muted tracking-wider block mb-1.5">Member Full Name *</label>
+                              <label className="text-[10px] uppercase text-church-muted tracking-wider block mb-1.5">Member Full Name * <span className="text-[0.65em] text-primary-gold/70">(അംഗത്തിന്റെ സമ്പൂർണ പേര്)</span></label>
                               <input
                                 type="text"
                                 placeholder="Member Name"
@@ -337,7 +337,7 @@ export default function RegisterFamilyPage() {
                             </div>
 
                             <div className="md:col-span-3">
-                              <label className="text-[10px] uppercase text-church-muted tracking-wider block mb-1.5">Relation *</label>
+                              <label className="text-[10px] uppercase text-church-muted tracking-wider block mb-1.5">Relation * <span className="text-[0.65em] text-primary-gold/70">(ബന്ധം)</span></label>
                               <select
                                 {...register(`membersDetails.${index}.relation` as const)}
                                 className="w-full bg-black/80 border border-white/10 rounded-lg py-2 px-3 text-xs text-white focus:outline-none focus:border-primary-gold/60 transition-colors cursor-pointer"
@@ -349,7 +349,7 @@ export default function RegisterFamilyPage() {
                             </div>
 
                             <div className="md:col-span-3">
-                              <label className="text-[10px] uppercase text-church-muted tracking-wider block mb-1.5">Age *</label>
+                              <label className="text-[10px] uppercase text-church-muted tracking-wider block mb-1.5">Age * <span className="text-[0.65em] text-primary-gold/70">(വയസ്സ്)</span></label>
                               <input
                                 type="number"
                                 placeholder="Age"
@@ -377,7 +377,7 @@ export default function RegisterFamilyPage() {
                   {/* Section 5: Remarks / Spiritual Request */}
                   <div>
                     <h3 className="font-serif text-sm uppercase tracking-widest text-primary-gold font-bold mb-3">
-                      5. Remarks & Prayer Request (Optional)
+                      5. Remarks & Prayer Request (Optional) <span className="text-[0.7em] text-primary-gold/70">(കുറിപ്പുകൾ & പ്രാർത്ഥനാവിഷയം (ഐച്ഛികം))</span>
                     </h3>
                     <textarea
                       rows={3}
@@ -439,26 +439,6 @@ export default function RegisterFamilyPage() {
 
                 <div className="w-[80px] h-[1px] bg-primary-gold/20 mb-6" />
 
-                {submittedData && (
-                  <div className="bg-black/40 border border-white/5 rounded-xl p-5 mb-8 max-w-md w-full text-left font-sans text-xs space-y-2.5">
-                    <div>
-                      <span className="text-church-muted block uppercase text-[9px] tracking-wider">Assigned System ID</span>
-                      <span className="text-primary-gold font-mono font-bold text-sm block mt-0.5">{submittedData.id}</span>
-                    </div>
-                    <div>
-                      <span className="text-church-muted block uppercase text-[9px] tracking-wider">Family Head</span>
-                      <span className="text-white text-xs block font-semibold mt-0.5">{submittedData.familyHead}</span>
-                    </div>
-                    <div>
-                      <span className="text-church-muted block uppercase text-[9px] tracking-wider">Parish Ward Assigned</span>
-                      <span className="text-white text-xs block mt-0.5">{submittedData.wardName}</span>
-                    </div>
-                    <div>
-                      <span className="text-church-muted block uppercase text-[9px] tracking-wider">Enrolled At</span>
-                      <span className="text-white text-xs block mt-0.5">{new Date(submittedData.registeredAt).toLocaleString()}</span>
-                    </div>
-                  </div>
-                )}
 
                 <p className="font-sans text-xs sm:text-sm text-church-muted leading-relaxed max-w-xl mb-10 text-center">
                   Your family details have been saved to our local filesystem database. Please introduce yourself and present this printout/details to **Rev. Fr. Thomas Kaloor** during the Sunday Holy Qurbana to receive his personal blessings and the formal welcoming rite.

@@ -121,7 +121,7 @@ export default function DonationsPage() {
             transition={{ delay: 0.2, duration: 0.8 }}
             className="font-serif text-4xl md:text-6xl text-white tracking-wide"
           >
-            Holy Offerings
+            Holy Offerings <span className="block text-2xl md:text-4xl mt-1 text-primary-gold/70">(ദാനങ്ങൾ)</span>
           </motion.h1>
           <div className="w-[80px] h-[1px] bg-primary-gold/30 mx-auto mt-6" />
         </div>
@@ -141,7 +141,7 @@ export default function DonationsPage() {
                   {/* 1. Purpose selector */}
                   <div>
                     <label className="font-serif text-sm uppercase tracking-widest text-primary-gold font-bold block mb-4">
-                      1. Select Offering Purpose
+                      1. Select Offering Purpose <span className="text-[0.7em] text-primary-gold/70">(ദാനം ലക്ഷ്യം തിരഞ്ഞെടുക്കുക)</span>
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {purposes.map((p) => (
@@ -167,7 +167,7 @@ export default function DonationsPage() {
                   {/* 2. Amount Selection */}
                   <div>
                     <label className="font-serif text-sm uppercase tracking-widest text-primary-gold font-bold block mb-4">
-                      2. Choose Offering Amount (INR)
+                      2. Choose Offering Amount (INR) <span className="text-[0.7em] text-primary-gold/70">(ദാനം തുക തിരഞ്ഞെടുക്കുക)</span>
                     </label>
                     
                     {/* Preset buttons */}
@@ -208,7 +208,7 @@ export default function DonationsPage() {
                   {/* 3. Personal Details */}
                   <div>
                     <label className="font-serif text-sm uppercase tracking-widest text-primary-gold font-bold block mb-4">
-                      3. Donor Information
+                      3. Donor Information <span className="text-[0.7em] text-primary-gold/70">(ദാനദാതാവിന്റെ വിവരം)</span>
                     </label>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       <div>
