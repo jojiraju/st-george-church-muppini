@@ -51,9 +51,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${cinzel.variable} ${outfit.variable} h-full antialiased`}
+      className={`${cinzel.variable} ${outfit.variable} antialiased`}
     >
-      <body className="min-h-full bg-[#080405] text-[#fcfaf2] font-sans antialiased overflow-x-hidden">
+      <body className="min-h-screen bg-[#080405] text-[#fcfaf2] font-sans antialiased overflow-x-hidden">
         <RootWrapper>{children}</RootWrapper>
       </body>
     </html>

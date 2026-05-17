@@ -81,7 +81,7 @@ export default function Footer() {
                 { name: "Priests & Council", href: "/leadership" },
                 { name: "Photo Gallery", href: "/gallery" },
                 { name: "Family Registration", href: "/register-family" },
-                { name: "Make an Offering", href: "/donations" }
+                { name: "Admin Directory", href: "/admin/registrations" }
               ].map((link) => (
                 <li key={link.name}>
                   <Link

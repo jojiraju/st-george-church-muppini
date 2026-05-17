@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ZoomIn, ChevronLeft, ChevronRight } from "lucide-react";
 import GlassCard from "@/components/ui/GlassCard";
+import { useLenis } from "@/lib/lenis";
 
 const galleryImages = [
   {
@@ -39,10 +41,47 @@ const galleryImages = [
 export default function GalleryPage() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
+  const lenis = useLenis();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const filteredImages = galleryImages.filter(
     (img) => activeFilter === "All" || img.category === activeFilter
   );
+
+  // Stop Lenis page scrolling when the lightbox is active
+  useEffect(() => {
+    if (!lenis) return;
+    if (lightboxIndex !== null) {
+      lenis.stop();
+    } else {
+      lenis.start();
+    }
+    return () => {
+      lenis.start();
+    };
+  }, [lightboxIndex, lenis]);
+
+  // Handle keyboard events (Escape to close, Left/Right arrow keys to navigate)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (lightboxIndex === null) return;
+      
+      if (e.key === "Escape") {
+        setLightboxIndex(null);
+      } else if (e.key === "ArrowLeft") {
+        setLightboxIndex((prev) => (prev! === 0 ? filteredImages.length - 1 : prev! - 1));
+      } else if (e.key === "ArrowRight") {
+        setLightboxIndex((prev) => (prev! === filteredImages.length - 1 ? 0 : prev! + 1));
+      }
+    };
+    
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [lightboxIndex, filteredImages.length]);
 
   const handlePrev = () => {
     if (lightboxIndex === null) return;
@@ -145,71 +184,90 @@ export default function GalleryPage() {
           </AnimatePresence>
         </motion.div>
 
-        {/* Lightbox Slider popup */}
-        <AnimatePresence>
-          {lightboxIndex !== null && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[99999] bg-[#050203]/98 backdrop-blur-2xl flex flex-col justify-center items-center px-6"
-            >
-              {/* Close Button */}
-              <button
+        {/* Lightbox Slider popup via React Portal to guarantee top-level stacking above the Navbar */}
+        {mounted && typeof document !== "undefined" && (
+          <AnimatePresence>
+            {lightboxIndex !== null && createPortal(
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 onClick={() => setLightboxIndex(null)}
-                className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/5 text-white/70 hover:text-primary-gold transition-colors"
-                aria-label="Close Lightbox"
+                className="fixed inset-0 z-[99999] bg-[#050203]/98 backdrop-blur-2xl flex flex-col justify-center items-center px-6"
               >
-                <X className="w-8 h-8" />
-              </button>
-
-              {/* Slider Image Frame */}
-              <div className="relative max-w-4xl w-full h-[65vh] flex items-center justify-center select-none">
-                {/* Navigation Left */}
+                {/* Close Button */}
                 <button
-                  onClick={handlePrev}
-                  className="absolute left-0 sm:-left-16 p-3 rounded-full hover:bg-white/5 text-white/50 hover:text-primary-gold transition-colors z-10"
-                  aria-label="Previous Image"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setLightboxIndex(null);
+                  }}
+                  className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/5 text-white/70 hover:text-primary-gold transition-colors z-[100000] cursor-pointer"
+                  aria-label="Close Lightbox"
                 >
-                  <ChevronLeft className="w-8 h-8" />
+                  <X className="w-8 h-8" />
                 </button>
 
-                {/* Main Image */}
-                <motion.img
-                  key={filteredImages[lightboxIndex].id}
-                  initial={{ scale: 0.95, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 0.4 }}
-                  src={filteredImages[lightboxIndex].url}
-                  alt={filteredImages[lightboxIndex].title}
-                  className="max-w-full max-h-full object-contain rounded-xl shadow-2xl border border-white/5"
-                />
-
-                {/* Navigation Right */}
-                <button
-                  onClick={handleNext}
-                  className="absolute right-0 sm:-right-16 p-3 rounded-full hover:bg-white/5 text-white/50 hover:text-primary-gold transition-colors z-10"
-                  aria-label="Next Image"
+                {/* Slider Image Frame */}
+                <div 
+                  onClick={(e) => e.stopPropagation()}
+                  className="relative max-w-4xl w-full h-[65vh] flex items-center justify-center select-none"
                 >
-                  <ChevronRight className="w-8 h-8" />
-                </button>
-              </div>
+                  {/* Navigation Left */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePrev();
+                    }}
+                    className="absolute left-0 sm:-left-16 p-3 rounded-full hover:bg-white/5 text-white/50 hover:text-primary-gold transition-colors z-10 cursor-pointer"
+                    aria-label="Previous Image"
+                  >
+                    <ChevronLeft className="w-8 h-8" />
+                  </button>
 
-              {/* Lightbox Metadata Description block */}
-              <div className="text-center mt-6 max-w-xl select-none">
-                <span className="font-sans text-[10px] text-primary-gold uppercase tracking-widest font-bold block mb-1">
-                  {filteredImages[lightboxIndex].category}
-                </span>
-                <h2 className="font-serif text-lg text-white font-semibold tracking-wide">
-                  {filteredImages[lightboxIndex].title}
-                </h2>
-                <p className="font-sans text-xs text-church-muted mt-2 leading-relaxed">
-                  {filteredImages[lightboxIndex].desc}
-                </p>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                  {/* Main Image */}
+                  <motion.img
+                    key={filteredImages[lightboxIndex].id}
+                    initial={{ scale: 0.95, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.4 }}
+                    src={filteredImages[lightboxIndex].url}
+                    alt={filteredImages[lightboxIndex].title}
+                    className="max-w-full max-h-full object-contain rounded-xl shadow-2xl border border-white/5"
+                  />
+
+                  {/* Navigation Right */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleNext();
+                    }}
+                    className="absolute right-0 sm:-right-16 p-3 rounded-full hover:bg-white/5 text-white/50 hover:text-primary-gold transition-colors z-10 cursor-pointer"
+                    aria-label="Next Image"
+                  >
+                    <ChevronRight className="w-8 h-8" />
+                  </button>
+                </div>
+
+                {/* Lightbox Metadata Description block */}
+                <div 
+                  onClick={(e) => e.stopPropagation()}
+                  className="text-center mt-6 max-w-xl select-none"
+                >
+                  <span className="font-sans text-[10px] text-primary-gold uppercase tracking-widest font-bold block mb-1">
+                    {filteredImages[lightboxIndex].category}
+                  </span>
+                  <h2 className="font-serif text-lg text-white font-semibold tracking-wide">
+                    {filteredImages[lightboxIndex].title}
+                  </h2>
+                  <p className="font-sans text-xs text-church-muted mt-2 leading-relaxed">
+                    {filteredImages[lightboxIndex].desc}
+                  </p>
+                </div>
+              </motion.div>,
+              document.body
+            )}
+          </AnimatePresence>
+        )}
 
       </div>
     </div>

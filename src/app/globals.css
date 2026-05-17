@@ -46,6 +46,23 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #d4af37;
 }
+::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Premium Invisible Scrollbar for Nested Elegant Panels */
+.scrollbar-elegant {
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE/Edge */
+}
+.scrollbar-elegant::-webkit-scrollbar {
+  display: none !important; /* Chrome, Safari, Opera */
+  width: 0 !important;
+  height: 0 !important;
+}
+
 
 input:-webkit-autofill,
 textarea:-webkit-autofill,

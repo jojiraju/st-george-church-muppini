@@ -76,12 +76,4 @@ export const councilMembers: CouncilMember[] = [
     phone: "+91 94472 00002",
     image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=300" // elegant dummy image
   },
-  {
-    id: "auditor",
-    name: "Mr. Roy Thomas",
-    role: "Parish Auditor",
-    ward: "St. George Ward (Palemad)",
-    phone: "+91 94474 00004",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=300" // elegant dummy image
-  }
 ];

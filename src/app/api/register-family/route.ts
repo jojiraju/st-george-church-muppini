@@ -146,3 +146,52 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export async function GET() {
+  try {
+    const isVercel = !!process.env.VERCEL;
+    const dbPath = isVercel
+      ? path.join("/tmp", "registrations.json")
+      : path.join(process.cwd(), "src", "data", "registrations.json");
+
+    let dbContent: any[] = [];
+    try {
+      const fileData = await fs.readFile(dbPath, "utf-8");
+      dbContent = JSON.parse(fileData);
+    } catch (readError) {
+      if (isVercel) {
+        try {
+          const bundledPath = path.join(process.cwd(), "src", "data", "registrations.json");
+          const fileData = await fs.readFile(bundledPath, "utf-8");
+          dbContent = JSON.parse(fileData);
+        } catch (bundleReadError) {
+          dbContent = [];
+        }
+      } else {
+        dbContent = [];
+      }
+    }
+
+    // Sort registrations by registered date (newest first)
+    const sortedContent = dbContent.sort((a, b) => {
+      const dateA = new Date(a.registeredAt || 0).getTime();
+      const dateB = new Date(b.registeredAt || 0).getTime();
+      return dateB - dateA;
+    });
+
+    return NextResponse.json({
+      success: true,
+      data: sortedContent
+    });
+  } catch (error: any) {
+    console.error("Backend error during listing registrations:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Internal server error occurred",
+        error: error.message
+      },
+      { status: 500 }
+    );
+  }
+}

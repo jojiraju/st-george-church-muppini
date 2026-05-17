@@ -5,17 +5,17 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Users, 
-  UserPlus, 
-  MapPin, 
-  Phone, 
-  Mail, 
-  Plus, 
-  Trash2, 
-  CheckCircle2, 
-  RefreshCw, 
-  ShieldCheck, 
+import {
+  Users,
+  UserPlus,
+  MapPin,
+  Phone,
+  Mail,
+  Plus,
+  Trash2,
+  CheckCircle2,
+  RefreshCw,
+  ShieldCheck,
   ChevronRight,
   BookOpen
 } from "lucide-react";
@@ -129,7 +129,7 @@ export default function RegisterFamilyPage() {
       <div className="absolute bottom-[20%] left-[-150px] w-[350px] h-[350px] bg-primary-gold-dark/5 rounded-full filter blur-[80px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        
+
         {/* Page Title */}
         <div className="text-center mb-16">
           <motion.span
@@ -164,14 +164,14 @@ export default function RegisterFamilyPage() {
             >
               <GlassCard hoverEffect={false} glowColor="gold" className="bg-[#120a0c]/60 border-white/5 p-6 md:p-10">
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 font-sans">
-                  
+
                   {/* Section 1: Household Details */}
                   <div>
                     <h3 className="font-serif text-sm uppercase tracking-widest text-primary-gold font-bold mb-5 flex items-center gap-2 border-b border-primary-gold/15 pb-2">
                       <Users className="w-4 h-4 text-primary-gold" />
                       1. Household Information <span className="text-[0.7em] text-primary-gold/70">(കുടുംബ വിവരങ്ങൾ)</span>
                     </h3>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="text-xs uppercase text-church-muted tracking-wider block mb-2 font-medium">Family Head Name * <span className="text-[0.65em] text-primary-gold/70">(കുടുംബനാഥന്‍റെ പേര്)</span></label>
@@ -204,7 +204,7 @@ export default function RegisterFamilyPage() {
                       <MapPin className="w-4 h-4 text-primary-gold" />
                       2. Residence & Parish Ward <span className="text-[0.7em] text-primary-gold/70">(താമസം & ഇടവക വാർഡ്)</span>
                     </h3>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       <div>
                         <label className="text-xs uppercase text-church-muted tracking-wider block mb-2 font-medium">House Name * <span className="text-[0.65em] text-primary-gold/70">(വീടിന്റെ പേര്)</span></label>
@@ -253,7 +253,7 @@ export default function RegisterFamilyPage() {
                       <Phone className="w-4 h-4 text-primary-gold" />
                       3. Contact Coordinates <span className="text-[0.7em] text-primary-gold/70">(ബന്ധപ്പെടാനുള്ള വിശദാംശങ്ങൾ)</span>
                     </h3>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       <div className="md:col-span-1">
                         <label className="text-xs uppercase text-church-muted tracking-wider block mb-2 font-medium">Contact Phone * <span className="text-[0.65em] text-primary-gold/70">(സമ്പർക്ക ഫോൺ)</span></label>
@@ -391,7 +391,7 @@ export default function RegisterFamilyPage() {
                   <div className="flex flex-col sm:flex-row justify-between items-center gap-6 pt-6 border-t border-white/5">
                     <div className="flex items-center gap-2 text-xs text-white/50">
                       <ShieldCheck className="w-4 h-4 text-primary-gold" />
-                      <span>Saved securely to local Node.js JSON Database</span>
+                      <span>Saved securely</span>
                     </div>
 
                     <MagneticButton>
@@ -432,7 +432,7 @@ export default function RegisterFamilyPage() {
                 <span className="font-serif text-xs uppercase tracking-[0.25em] text-primary-gold font-bold block mb-2">
                   Registration Successfully Recorded
                 </span>
-                
+
                 <h2 className="font-serif text-2xl md:text-3xl text-white tracking-wide font-semibold mb-6">
                   Welcome to the St. George Parish Family!
                 </h2>

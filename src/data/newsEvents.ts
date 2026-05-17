@@ -103,7 +103,6 @@ The election was held under the supervision of Rev. Fr. Thomas Kaloor, Vicar, an
 *   **Parish Trustee (Finance & Admin):** Mr. Abraham Valel (എബ്രഹാം വാലേൽ)
 *   **Parish Joint Trustee:** Mr. Shaji Varghese Vadakkethil
 *   **Parish Council Secretary:** Mr. Josh Mayilil (ജോഷ് മലയിൽ)
-*   **Auditor:** Mr. Roy Thomas
 
 Over 25 wards representatives were elected to serve the various prayer groups (Koodara Yogams) across the Edakkara parish boundaries. We express our deepest gratitude to the outgoing council for their selfless service, especially in leading the golden jubilee infrastructure renovations.
 
