@@ -3,12 +3,11 @@
 import { Quote } from "lucide-react";
 import { motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Autoplay, EffectFade } from "swiper/modules";
+import { Pagination, Autoplay } from "swiper/modules";
 
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
-import "swiper/css/effect-fade";
 
 import GlassCard from "../ui/GlassCard";
 
@@ -77,12 +76,11 @@ export default function Testimonials() {
           transition={{ duration: 0.8 }}
         >
           <Swiper
-            modules={[Pagination, Autoplay, EffectFade]}
-            effect="fade"
-            fadeEffect={{ crossFade: true }}
+            modules={[Pagination, Autoplay]}
             pagination={{ clickable: true }}
             autoplay={{ delay: 5000, disableOnInteraction: false }}
             loop={true}
+            touchStartPreventDefault={false}
             className="w-full pb-14"
           >
             {testimonials.map((testi) => (
